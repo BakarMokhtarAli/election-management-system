@@ -2,6 +2,11 @@ import express from "express";
 import prisma from "./lib/index.js"
 const router = express.Router();
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
+dotenv.config();
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 router.get("/",async(req,res)=>{
     try {
@@ -57,6 +62,35 @@ router.post("/signup",async(req,res)=>{
             return res.status(404).json({message: `voter can not created`})
         }
         return res.status(200).json({message: `voter created success!`,voter})
+    } catch (error) {
+        res.status(500).json({message:"internal servarl error",error:error.message})
+    }
+});
+
+router.post("/signin",async(req,res)=>{
+    try {
+        const { email, password } = req.body;
+        const existingVoter = await prisma.voters.findUnique({
+            where: {
+                email: email
+            }
+        })
+        if(!existingVoter){
+            return res.status(409).json({message: `email is not exist`})
+        }
+        // compare password
+
+        const isPasswordCorrect = await bcrypt.compare(password,existingVoter.password)
+        if(!isPasswordCorrect){
+            return res.status(404).json({message: 'password is incorrect'})
+        }
+        const token = jwt.sign(
+            {id:existingVoter.id, name:existingVoter.name, email:existingVoter.email},
+            SECRET_KEY,
+            {expiresIn:'1h'}
+        )
+        return res.status(201).json({message: 'voter logged in success!',token})
+
     } catch (error) {
         res.status(500).json({message:"internal servarl error",error:error.message})
     }

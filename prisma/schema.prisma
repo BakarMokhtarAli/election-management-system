@@ -35,8 +35,10 @@ model voters {
 
 model votes {
   id Int @id @default(autoincrement())
-  voterId Int
+  voterId Int @unique
   candidateId Int
   voter voters @relation(fields: [voterId], references: [id])
   vote candidate @relation(fields: [candidateId], references: [id])
 }
+
+

@@ -1,6 +1,7 @@
 import express from "express";
 import prisma from "./lib/index.js"
 const router = express.Router();
+import adminAuthenticate from "./middleware/adminAuthenticate.js";
 
 router.get("/",async(req,res)=>{
     try {
@@ -29,12 +30,12 @@ router.get("/:id",async(req,res)=>{
         return res.status(500).json({message:'internal server error',error:error.message})
     }
 })
-router.post("/",async(req,res)=>{
+router.post("/",adminAuthenticate,async(req,res)=>{
     try {
-        const { name, cand_type } = req.body;
+        const { name, cand_type, email } = req.body;
         const existCandidate = await prisma.candidate.findUnique({
             where: {
-                name: name
+                email,
             }
         });
         if(existCandidate){
@@ -43,7 +44,8 @@ router.post("/",async(req,res)=>{
         const candidate = await prisma.candidate.create({
             data:{
                 name,
-                cand_type
+                cand_type,
+                email
             }
         })
         if(!candidate){
@@ -54,14 +56,15 @@ router.post("/",async(req,res)=>{
         return res.status(500).json({message:'internal server error',error:error.message})
     }
 })
-router.put("/:id",async(req,res)=>{
+router.put("/:id",adminAuthenticate,async(req,res)=>{
     try {
         const id = req.params.id * 1;
-        const { name, cand_type } = req.body;
+        const { name, cand_type,email } = req.body;
         const candidate = await prisma.candidate.update({
             data:{
                 name,
-                cand_type
+                cand_type,
+                email
             },
             where:{
                 id,
@@ -75,7 +78,7 @@ router.put("/:id",async(req,res)=>{
         return res.status(500).json({message:'internal server error',error:error.message})
     }
 })
-router.delete("/:id",async(req,res)=>{
+router.delete("/:id",adminAuthenticate,async(req,res)=>{
     try {
         const id = req.params.id * 1;
         const candidate = await prisma.candidate.delete({

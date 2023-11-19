@@ -5,7 +5,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
-
+import Authenticate from "./middleware/Authenticate.js";
 const SECRET_KEY = process.env.SECRET_KEY;
 
 router.get("/",async(req,res)=>{
@@ -95,7 +95,7 @@ router.post("/signin",async(req,res)=>{
         res.status(500).json({message:"internal servarl error",error:error.message})
     }
 });
-router.put("/:id",async(req,res)=>{
+router.put("/:id",Authenticate,async(req,res)=>{
     try {
         const { id } = req.params;
         const { name,email,password } = req.body
@@ -118,7 +118,7 @@ router.put("/:id",async(req,res)=>{
     }
 });
 
-router.delete("/:id",async(req,res)=>{
+router.delete("/:id",Authenticate,async(req,res)=>{
     try {
         const { id } = req.params;
         const voter = await prisma.voters.delete({

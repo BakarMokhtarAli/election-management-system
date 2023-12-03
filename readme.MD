@@ -1,7 +1,7 @@
 # Election API Documentation
 
 ## Base URL
-The base URL for all endpoints is `/voters`.
+The base URL for all endpoints is `https://election-managment-system.onrender.com`.
 
 ## Endpoints
 

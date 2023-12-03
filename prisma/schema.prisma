@@ -23,6 +23,7 @@ model candidate {
   cand_type String
   email String @unique
   vote votes[]
+  results Results[]
 }
 
 model voters {
@@ -31,6 +32,14 @@ model voters {
   email String @unique
   password String
   vote votes[]
+}
+
+model Results {
+  id Int @id @default(autoincrement())
+  candidateId Int
+  voteCount Int
+  createAt DateTime @default(now())
+  result candidate @relation(fields: [candidateId], references: [id])
 }
 
 model votes {

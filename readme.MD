@@ -363,9 +363,57 @@ Certainly! Below is the API documentation for the provided code:
       "candidateId": 1
     }
     ```
+    Certainly! Below is the API documentation for the provided code:
+
+---
+
+### 1. Update Vote by ID
+
+- **Endpoint:** `PUT api/votes/:id`
+- **Description:** Update a vote by ID.
+- **Request:**
+  - **Authorization Header:**
+    - `Authorization`: Bearer token for voter authentication.
+  - **Parameters:**
+    - `id` (integer): The ID of the vote.
+  - **Body:**
+    - `candidateId` (integer): The ID of the new candidate.
+- **Response:**
+  - **Success Status Code:** `200 OK`
+  - **Success Response:**
+    ```json
+    {
+      "message": "Vote updated successfully!",
+      "vote": {
+        "id": 1,
+        "voterId": 1,
+        "candidateId": 2
+      }
+    }
+    ```
   - **Error Status Codes:**
-    - `400 Bad Request`: If the voter has already voted.
-    - `404 Not Found`: If the vote cannot be accepted.
+    - `404 Not Found`: If the vote with the specified ID is not found.
+    - `500 Internal Server Error`: If an internal server error occurs.
+
+### 2. Delete Vote by ID
+
+- **Endpoint:** `DELETE api/votes/:id`
+- **Description:** Delete a vote by ID.
+- **Request:**
+  - **Authorization Header:**
+    - `Authorization`: Bearer token for voter authentication.
+  - **Parameters:**
+    - `id` (integer): The ID of the vote.
+- **Response:**
+  - **Success Status Code:** `200 OK`
+  - **Success Response:**
+    ```json
+    {
+      "message": "Vote deleted successfully!"
+    }
+    ```
+  - **Error Status Codes:**
+    - `404 Not Found`: If the vote with the specified ID is not found.
     - `500 Internal Server Error`: If an internal server error occurs.
 
 ---
